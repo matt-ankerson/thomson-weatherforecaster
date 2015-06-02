@@ -228,15 +228,18 @@ public class MainScreen extends ActionBarActivity
 
         Resources resources = getResources();
 
+        String allProvidersName = resources.getResourceEntryName(R.drawable.app_icon);
         String owmImageName = resources.getResourceEntryName(R.drawable.owm);
         String metserviceImageName = resources.getResourceEntryName(R.drawable.metservice);
         String wuImageName = resources.getResourceEntryName(R.drawable.wu);
 
+        int allProvidersId = resources.getIdentifier(allProvidersName, "drawable", getPackageName());
         int owmResourceId = resources.getIdentifier(owmImageName, "drawable", getPackageName());
         int metserviceResourceId = resources.getIdentifier(metserviceImageName, "drawable", getPackageName());
         int wuResourceId = resources.getIdentifier(wuImageName, "drawable", getPackageName());
 
         // Populate List
+        providers.add(new Provider("All Providers", allProvidersId));
         providers.add(new Provider("Metservice", metserviceResourceId));
         providers.add(new Provider("Open Weather Map", owmResourceId));
         providers.add(new Provider("Weather Underground", wuResourceId));

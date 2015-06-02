@@ -22,9 +22,10 @@ import java.util.GregorianCalendar;
 public class ForecastDaysScreen extends ActionBarActivity
 {
     private final int TIME_PERIOD_IN_DAYS = 10;
-    public final int METSERVICE = 0;
-    public final int OPENWEATHERMAP = 1;
-    public final int WEATHERUNDERGROUND = 2;
+    public final int ALLPROVIDERS = 0;
+    public final int METSERVICE = 1;
+    public final int OPENWEATHERMAP = 2;
+    public final int WEATHERUNDERGROUND = 3;
     // Controls
     ListView lvUpcomingDays;
     int provider;

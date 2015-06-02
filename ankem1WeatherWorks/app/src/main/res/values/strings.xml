@@ -11,4 +11,5 @@
     <string name="title_activity_forecast_days_screen">ForecastDaysScreen</string>
     <string name="not_available">Not Available.</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_all_providers_screen">AllProvidersScreen</string>
 </resources>

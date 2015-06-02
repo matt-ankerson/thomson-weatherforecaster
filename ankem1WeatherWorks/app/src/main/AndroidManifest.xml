@@ -19,8 +19,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainScreen"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,44 +29,52 @@
         </activity>
         <activity
             android:name=".OpenWeatherMapScreen"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_open_weather_map_screen"
-            android:parentActivityName=".MainScreen" >
+            android:parentActivityName=".MainScreen"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bit.ankem1.WeatherWorks.MainScreen" />
         </activity>
         <activity
             android:name=".MetserviceScreen"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_metservice_screen"
-            android:parentActivityName=".MainScreen" >
+            android:parentActivityName=".MainScreen"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bit.ankem1.WeatherWorks.MainScreen" />
         </activity>
         <activity
             android:name=".WUScreen"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_wuscreen"
-            android:parentActivityName=".MainScreen" >
+            android:parentActivityName=".MainScreen"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bit.ankem1.WeatherWorks.MainScreen" />
         </activity>
         <activity
             android:name=".ForecastDaysScreen"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_forecast_days_screen"
-            android:parentActivityName=".MainScreen" >
+            android:parentActivityName=".MainScreen"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bit.ankem1.WeatherWorks.MainScreen" />
         </activity>
         <activity
             android:name=".Settings"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".AllProvidersScreen"
+            android:label="@string/title_activity_all_providers_screen"
+            android:parentActivityName=".MainScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bit.ankem1.WeatherWorks.MainScreen" />
         </activity>
     </application>
 
