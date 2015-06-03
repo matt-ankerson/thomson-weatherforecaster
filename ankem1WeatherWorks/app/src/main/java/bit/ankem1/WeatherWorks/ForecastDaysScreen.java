@@ -101,11 +101,23 @@ public class ForecastDaysScreen extends ActionBarActivity
                     if(WeatherStore.getInstance().getOwmResponse() == null)
                         proceed = false;
                 }
-                else    // provider == WEATHERUNDERGROUND
+                else
                 {
-                    nextActivity = new WUScreen();
-                    if(WeatherStore.getInstance().getWuResponse() == null)
-                        proceed = false;
+                    if(provider == ALLPROVIDERS)
+                    {
+                        nextActivity = new AllProvidersScreen();
+                        // check that ALL data exists in the WeatherStore
+                        if((WeatherStore.getInstance().getOwmResponse() == null) ||
+                                (WeatherStore.getInstance().getWuResponse() == null) ||
+                                (WeatherStore.getInstance().getMetserviceResponse() == null))
+                            proceed = false;
+                    }
+                    else // provider == WEATHERUNDERGROUND
+                    {
+                        nextActivity = new WUScreen();
+                        if (WeatherStore.getInstance().getWuResponse() == null)
+                            proceed = false;
+                    }
                 }
             }
 

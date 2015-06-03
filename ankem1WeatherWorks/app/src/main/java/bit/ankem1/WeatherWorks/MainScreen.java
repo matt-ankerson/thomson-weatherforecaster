@@ -23,13 +23,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import bit.ankem1.WeatherWorks.MetserviceApi.MetserviceResponse;
 import bit.ankem1.WeatherWorks.MetserviceApi.MetserviceRestClient;
 import bit.ankem1.WeatherWorks.OpenWeatherMapApi.OpenWeatherMapRestClient;
+import bit.ankem1.WeatherWorks.OpenWeatherMapApi.Weather;
 import bit.ankem1.WeatherWorks.WeatherUndergroundApi.WeatherUndergroundResponse;
 import bit.ankem1.WeatherWorks.WeatherUndergroundApi.WeatherUndergroundRestClient;
 import retrofit.Callback;
@@ -41,6 +46,10 @@ public class MainScreen extends ActionBarActivity
 {
     // Shared Preferences Filename
     private final String PREFS_NAME = "metservice_location";
+    private final double KELVIN = 273.15;
+    private final int NTEMPS = 2;
+    private final double CONVERTMULTIPLIER = 18;
+    private final double CONVERTDIVISOR = 5;
     // Constants for polling location
     private final long INTERVAL = 0;
     private final float DISTANCE = 0;
@@ -55,6 +64,9 @@ public class MainScreen extends ActionBarActivity
     TextView txtMetserDescription;
     TextView txtWUDescription;
     TextView txtOWMDescription;
+    TextView txtTempVar;
+    TextView txtRainVar;
+    TextView txtWindVar;
     ListView lvProviders;
     // Location
     double latitude;
@@ -82,6 +94,9 @@ public class MainScreen extends ActionBarActivity
         txtMetserDescription = (TextView)findViewById(R.id.txtMainMetserviceDescription);
         txtOWMDescription = (TextView)findViewById(R.id.txtMainOpenWeatherMapDescription);
         txtWUDescription = (TextView)findViewById(R.id.txtMainWeatherUndergroundDescription);
+        txtTempVar = (TextView)findViewById(R.id.txtVarTemp);
+        txtRainVar = (TextView)findViewById(R.id.txtVarRain);
+        txtWindVar = (TextView)findViewById(R.id.txtVarWind);
         lvProviders = (ListView)findViewById(R.id.lvProviders);
 
         // Bind click handlers
@@ -113,6 +128,8 @@ public class MainScreen extends ActionBarActivity
         // Populate the ListView with available providers
         populateProviderListView();
 
+        populateVariances();
+
     }
 
     // Inner class for handling ListView click events
@@ -138,6 +155,61 @@ public class MainScreen extends ActionBarActivity
 
     }
 
+    // Calculate and show the variance for pertinent weather information today.
+    public void populateVariances()
+    {
+        // Only do this if we have the weather information.
+        if((WeatherStore.getInstance().getOwmResponse() != null) &&
+                (WeatherStore.getInstance().getWuResponse() != null) &&
+                (WeatherStore.getInstance().getMetserviceResponse() != null))
+        {
+            // For some providers, we need to get an average value first...
+            double metserviceAverageTemp = Double.parseDouble(WeatherStore.getInstance().getMetserviceResponse().getDays()[0].getMax()) +
+                    Double.parseDouble(WeatherStore.getInstance().getMetserviceResponse().getDays()[0].getMin()) / NTEMPS;
+
+            double owmAverageTemp = (WeatherStore.getInstance().getOwmResponse().getList()[0].getTemp().getMax() +
+                    WeatherStore.getInstance().getOwmResponse().getList()[0].getTemp().getMin()) / NTEMPS;
+
+            owmAverageTemp = owmAverageTemp - KELVIN;
+
+            double wuAverageTemp = Double.parseDouble(WeatherStore.getInstance().getWuResponse().getForecast().getSimpleforecast().getForecastday()[0].getHigh().getCelcius()) +
+                    Double.parseDouble(WeatherStore.getInstance().getWuResponse().getForecast().getSimpleforecast().getForecastday()[0].getLow().getCelcius()) / NTEMPS;
+
+            // Build an ArrayList for temperature, rain and wind data.
+
+            // Temperatures
+            ArrayList<Double> temperatures = new ArrayList<>();
+            temperatures.add(owmAverageTemp);
+            temperatures.add(metserviceAverageTemp);
+            temperatures.add(wuAverageTemp);
+
+            // Wind
+
+            double ospeed = WeatherStore.getInstance().getOwmResponse().getList()[0].getSpeed();
+            // Convert meters per second to kilometers per hour using this formula.
+            double ospeedKph = (ospeed * CONVERTMULTIPLIER)/CONVERTDIVISOR;
+
+            ArrayList<Double> wind = new ArrayList<>();
+            wind.add(ospeedKph);
+            wind.add(WeatherStore.getInstance().getWuResponse().getForecast().getSimpleforecast().getForecastday()[0].getAvewind().getKph());
+
+            // Rain
+
+            ArrayList<Double> rain = new ArrayList<>();
+            rain.add(WeatherStore.getInstance().getWuResponse().getForecast().getSimpleforecast().getForecastday()[0].getQpf_allday().getMm());
+
+            double tempVariance = Worker.calculateVariance(temperatures);
+            double rainVariance = Worker.calculateVariance(rain);
+            double windVariance = Worker.calculateVariance(wind);
+
+            DecimalFormat df = new DecimalFormat("####0.00");
+
+            txtTempVar.setText(String.valueOf(df.format(tempVariance)));
+            txtWindVar.setText(String.valueOf(df.format(windVariance)));
+            txtRainVar.setText(String.valueOf(df.format(rainVariance)));
+        }
+    }
+
     // Pull weather data from weatherunderground, store in WeatherStore
     public void pullWeatherUnderground()
     {
@@ -154,6 +226,8 @@ public class MainScreen extends ActionBarActivity
                 txtWUDescription.setText(wuResponse.getForecast().getTxt_forecast().getForecastday()[0].getFcttext_metric());
                 // Save a reference to the entire object hierarchy for use later.
                 WeatherStore.getInstance().setWuResponse(wuResponse);
+
+                populateVariances();
             }
 
             @Override
@@ -176,6 +250,8 @@ public class MainScreen extends ActionBarActivity
                 txtMetserDescription.setText(metserviceResponse.getDays()[0].getForecast());
                 // Save a reference to the returned object in the singleton
                 WeatherStore.getInstance().setMetserviceResponse(metserviceResponse);
+
+                populateVariances();
             }
 
             @Override
@@ -207,6 +283,8 @@ public class MainScreen extends ActionBarActivity
                 txtOWMDescription.setText(owmResponse.getList()[0].getWeather()[0].getDescription());
                 // Save a reference to the entire object hierarchy for use later.
                 WeatherStore.getInstance().setOwmResponse(owmResponse);
+
+                populateVariances();
             }
 
             @Override

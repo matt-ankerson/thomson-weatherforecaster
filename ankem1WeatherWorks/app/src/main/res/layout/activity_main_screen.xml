@@ -36,10 +36,76 @@
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="120sp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:layout_marginStart="20sp"
+            android:layout_gravity="end">
+
+            <TextView
+                android:id="@+id/txtVarianceTitle"
+                android:text="@string/variance_title"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Temperature Variance -->
+
+            <TextView
+                android:id="@+id/txtVarTempTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/var_temp_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                android:id="@+id/txtVarTemp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/desc_not_loaded"
+                android:textSize="12sp"/>
+
+            <!-- Rain Variance -->
+
+            <TextView
+                android:id="@+id/txtVarRainTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/var_rain_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                android:id="@+id/txtVarRain"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/desc_not_loaded"
+                android:textSize="12sp"/>
+
+            <!-- Wind Variance -->
+
+            <TextView
+                android:id="@+id/txtVarWindTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/var_wind_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                android:id="@+id/txtVarWind"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/desc_not_loaded"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
         <ScrollView
             android:layout_width="@dimen/description_width"
             android:layout_height="@dimen/description_height"
-            android:layout_marginTop="-65sp"
+            android:layout_marginTop="-200sp"
             android:id="@+id/scrollView" >
 
             <LinearLayout

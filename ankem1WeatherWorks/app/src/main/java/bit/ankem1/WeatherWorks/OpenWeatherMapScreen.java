@@ -92,8 +92,8 @@ public class OpenWeatherMapScreen extends ActionBarActivity
         txtOWMWind.setText("Kph: " + speed +
                             "\nDirection: " + deg + " degrees");
         txtOWMPressure.setText("Pressure: " + pressure);
-        txtOWMPrecipitation.setText("Clouds: " + clouds +
-                                    "\nRain: " + rain);
+        txtOWMPrecipitation.setText("Clouds: " + clouds + " %" +
+                                    "\nRain: " + rain + " mm for prev 3hrs");
         txtOWMHumidity.setText("Humidity: " + humidity);
     }
 

@@ -4,5 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="description_width">200sp</dimen>
     <dimen name="description_margin">10sp</dimen>
-    <dimen name="description_height">240sp</dimen>
+    <dimen name="description_height">210sp</dimen>
 </resources>
