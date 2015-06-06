@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import bit.ankem1.WeatherWorks.OpenWeatherMapApi.Day;
@@ -82,13 +83,15 @@ public class OpenWeatherMapScreen extends ActionBarActivity
     // Populate our TextViews with data belonging to this class
     public void populateTextViews()
     {
+        DecimalFormat df = new DecimalFormat("####0.00");
+
         txtOWMDescription.setText(main + "(" + description + ").");
-        txtOWMTemperature.setText("Min: " + min +
-                                    "\nMax: " + max +
-                                    "\nMorning: " + morn +
-                                    "\nDay: " + day +
-                                    "\nEvening: " + eve +
-                                    "\nNight: " + night);
+        txtOWMTemperature.setText("Min: " + df.format(min) +
+                                    "\nMax: " + df.format(max) +
+                                    "\nMorning: " + df.format(morn) +
+                                    "\nDay: " + df.format(day) +
+                                    "\nEvening: " + df.format(eve) +
+                                    "\nNight: " + df.format(night));
         txtOWMWind.setText("Kph: " + speed +
                             "\nDirection: " + deg + " degrees");
         txtOWMPressure.setText("Pressure: " + pressure);

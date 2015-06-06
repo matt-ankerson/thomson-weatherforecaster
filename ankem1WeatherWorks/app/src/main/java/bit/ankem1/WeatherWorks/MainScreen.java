@@ -95,7 +95,6 @@ public class MainScreen extends ActionBarActivity
         txtOWMDescription = (TextView)findViewById(R.id.txtMainOpenWeatherMapDescription);
         txtWUDescription = (TextView)findViewById(R.id.txtMainWeatherUndergroundDescription);
         txtTempVar = (TextView)findViewById(R.id.txtVarTemp);
-        txtRainVar = (TextView)findViewById(R.id.txtVarRain);
         txtWindVar = (TextView)findViewById(R.id.txtVarWind);
         lvProviders = (ListView)findViewById(R.id.lvProviders);
 
@@ -193,20 +192,13 @@ public class MainScreen extends ActionBarActivity
             wind.add(ospeedKph);
             wind.add(WeatherStore.getInstance().getWuResponse().getForecast().getSimpleforecast().getForecastday()[0].getAvewind().getKph());
 
-            // Rain
-
-            ArrayList<Double> rain = new ArrayList<>();
-            rain.add(WeatherStore.getInstance().getWuResponse().getForecast().getSimpleforecast().getForecastday()[0].getQpf_allday().getMm());
-
             double tempVariance = Worker.calculateVariance(temperatures);
-            double rainVariance = Worker.calculateVariance(rain);
             double windVariance = Worker.calculateVariance(wind);
 
             DecimalFormat df = new DecimalFormat("####0.00");
 
             txtTempVar.setText(String.valueOf(df.format(tempVariance)));
             txtWindVar.setText(String.valueOf(df.format(windVariance)));
-            txtRainVar.setText(String.valueOf(df.format(rainVariance)));
         }
     }
 
