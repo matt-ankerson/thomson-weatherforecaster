@@ -38,8 +38,13 @@ public class ForecastDaysScreen extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forecast_list);
 
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences("provider_location", 0);
+        // Our default location will be Dunedin.
+        String city = settings.getString("location", "dunedin");
+
         // Set basic ui settings
-        setTitle("Weather Works");
+        setTitle("Weather Works | " + city);
 
         // Get the intent
         Intent intent = getIntent();

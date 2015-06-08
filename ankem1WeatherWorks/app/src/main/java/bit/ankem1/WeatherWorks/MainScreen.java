@@ -124,6 +124,8 @@ public class MainScreen extends ActionBarActivity
         latitude = settings.getFloat("latitude", (float)DEFAULT_LAT);
         longitude = settings.getFloat("longitude", (float)DEFAULT_LON);
 
+        setTitle("Weather Works | " + city);
+
         // Pull all weather info, store in WeatherStore.
         pullOpenWeatherMap();
         pullMetservice();

@@ -41,5 +41,6 @@ public class Worker
         variance = variance / squaredDifferences.size();
 
         return variance;
+
     }
 }

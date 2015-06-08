@@ -2,6 +2,7 @@ package bit.ankem1.WeatherWorks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,8 +30,13 @@ public class Settings extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences("provider_location", 0);
+        // Our default location will be Dunedin.
+        String city = settings.getString("location", "dunedin");
+
         // Set basic ui settings
-        setTitle("Weather Works");
+        setTitle("Weather Works | " + city);
 
         // Get references to controls
         btnConfirm = (Button)findViewById(R.id.btnConfirm);

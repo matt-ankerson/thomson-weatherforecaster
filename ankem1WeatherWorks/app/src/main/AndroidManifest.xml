@@ -66,12 +66,14 @@
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainScreen"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".AllProvidersScreen"
             android:label="@string/title_activity_all_providers_screen"
-            android:parentActivityName=".MainScreen" >
+            android:parentActivityName=".MainScreen"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bit.ankem1.WeatherWorks.MainScreen" />

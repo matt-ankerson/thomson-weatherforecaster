@@ -45,6 +45,7 @@
             android:layout_marginStart="20sp"
             android:layout_gravity="end">
 
+
             <TextView
                 android:id="@+id/txtVarianceTitle"
                 android:text="@string/variance_title"
@@ -86,6 +87,7 @@
 
         </LinearLayout>
 
+
         <ScrollView
             android:layout_width="@dimen/description_width"
             android:layout_height="@dimen/description_height"
@@ -95,9 +97,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentTop="true">
+                android:layout_height="wrap_content">
 
             <!-- Metservice -->
 

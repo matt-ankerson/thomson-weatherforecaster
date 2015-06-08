@@ -1,6 +1,7 @@
 package bit.ankem1.WeatherWorks;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -127,8 +128,13 @@ public class AllProvidersScreen extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_providers_screen);
 
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences("provider_location", 0);
+        // Our default location will be Dunedin.
+        String city = settings.getString("location", "dunedin");
+
         // Set basic ui settings
-        setTitle("Weather Works");
+        setTitle("Weather Works | " + city);
 
         // Get references to controls
         txtTitle = (TextView)findViewById(R.id.txtAllProvidersTitle);
