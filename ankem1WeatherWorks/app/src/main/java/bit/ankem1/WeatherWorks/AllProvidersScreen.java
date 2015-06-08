@@ -5,8 +5,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +27,8 @@ public class AllProvidersScreen extends ActionBarActivity
     private final double KELVIN = 273.15;
     private final double CONVERTMULTIPLIER = 18;
     private final double CONVERTDIVISOR = 5;
+    private final int MAX_DAYS = 9;
+    private final int MIN_DAYS = 0;
 
     // The forecastday index
     int dayNumber;
@@ -31,6 +38,10 @@ public class AllProvidersScreen extends ActionBarActivity
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
+
+    TextView txtTitle;
+    Button btnNext;
+    Button btnPrevious;
 
     //---------------------
     // Weather Underground
@@ -116,6 +127,11 @@ public class AllProvidersScreen extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_providers_screen);
 
+        // Get references to controls
+        txtTitle = (TextView)findViewById(R.id.txtAllProvidersTitle);
+        btnNext = (Button)findViewById(R.id.btnNext);
+        btnPrevious = (Button)findViewById(R.id.btnPrevious);
+
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
 
@@ -133,6 +149,70 @@ public class AllProvidersScreen extends ActionBarActivity
 
         // set up list adapter
         expListView.setAdapter(listAdapter);
+
+        txtTitle.setText("All Providers: " + wtitle);
+
+        // Wire up click handlers
+        btnPrevious.setOnClickListener(new BtnPrevListener());
+        btnNext.setOnClickListener(new BtnNextListener());
+    }
+
+    // Inner class to handle button click events for btnNext
+    public class BtnNextListener implements View.OnClickListener
+    {
+
+        @Override
+        public void onClick(View v)
+        {
+            // Launch this activity again, passing in the next day's numeric value
+
+            // Don't try go forwards if this is the last day
+            if(dayNumber == MAX_DAYS)
+            {
+                // Report that there's no more days to see that way
+                Toast.makeText(AllProvidersScreen.this, "Can't go forward any further.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                // Show the previous day by creating an intent and launching this activity.
+                Intent refreshIntent = new Intent(AllProvidersScreen.this, AllProvidersScreen.class);
+
+                int nextDay = (dayNumber += 1);
+
+                refreshIntent.putExtra("day", nextDay);
+
+                startActivity(refreshIntent);
+            }
+        }
+    }
+
+    // Inner class to handle button click events for btnPrevious
+    public class BtnPrevListener implements View.OnClickListener
+    {
+
+        @Override
+        public void onClick(View v)
+        {
+            // Launch this Activity again, passing in the previous day's numeric value.
+
+            // Don't try go backwards if this is the first day
+            if (dayNumber == MIN_DAYS)
+            {
+                // Report that there's no more days to see that way
+                Toast.makeText(AllProvidersScreen.this, "Can't go back any further.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                // Show the previous day by creating an intent and launching this activity.
+                Intent refreshIntent = new Intent(AllProvidersScreen.this, AllProvidersScreen.class);
+
+                int nextDay = (dayNumber -= 1);
+
+                refreshIntent.putExtra("day", nextDay);
+
+                startActivity(refreshIntent);
+            }
+        }
     }
 
     private void prepareListData()
@@ -158,50 +238,51 @@ public class AllProvidersScreen extends ActionBarActivity
         descriptions.add(odescription);
         descriptions.add(wdescription);
 
+        DecimalFormat df = new DecimalFormat("####0.00");
+
         List<String> temperatures = new ArrayList<>();
-        temperatures.add("High: " + mmax);
-        temperatures.add("High: " + omax);
-        temperatures.add("High: " + wtempHighC);
-        temperatures.add("Low: " + mmin);
-        temperatures.add("Low: " + omin);
-        temperatures.add("Low: " + wtempLowC);
+        temperatures.add("High: " + mmax + " (metsvc)");
+        temperatures.add("High: " + df.format(omax) + " (owm)");
+        temperatures.add("High: " + wtempHighC + " (wu)");
+        temperatures.add("Low: " + mmin + " (metsvc)");
+        temperatures.add("Low: " + df.format(omin) + " (owm)");
+        temperatures.add("Low: " + wtempLowC + " (wu)");
 
         List<String> rain = new ArrayList<>();
-        rain.add(String.valueOf(orain) + " mm rain in prev 3hrs.");
-        rain.add(wrainMm_allDay + " mm rain all day.");
-        rain.add(wrainMm_day + " mm rain daytime.");
-        rain.add(wrainMm_night + " mm rain nighttime.");
-        rain.add(oclouds + " % cloudiness.");
+        rain.add(wrainMm_allDay + " mm rain all day." + " (wu)");
+        rain.add(wrainMm_day + " mm rain daytime." + " (wu)");
+        rain.add(wrainMm_night + " mm rain nighttime." + " (wu)");
+        rain.add(oclouds + " % cloudiness." + " (owm)");
 
         List<String> snow = new ArrayList<>();
-        snow.add(wsnowCm_allDay + " cm snow all day.");
-        snow.add(wsnowCm_day + " cm snow daytime.");
-        snow.add(wsnowCm_night + " cm snow nighttime.");
+        snow.add(wsnowCm_allDay + " cm snow all day." + " (wu)");
+        snow.add(wsnowCm_day + " cm snow daytime." + " (wu)");
+        snow.add(wsnowCm_night + " cm snow nighttime." + " (wu)");
 
         // Convert meters per second to kilometers per hour using this formula.
         double ospeedKph = (ospeed * CONVERTMULTIPLIER)/CONVERTDIVISOR;
 
         List<String> wind = new ArrayList<>();
-        wind.add("Speed: " + ospeedKph + " kph.");
-        wind.add("Speed: " + wwindKph + " kph.");
-        wind.add("Max Speed: " + wwindKphMax + " kph.");
-        wind.add("Direction: " + odeg + " degrees.");
-        wind.add("Direction: " + wwindDirection + ".");
+        wind.add("Speed: " + df.format(ospeedKph) + " kph." + " (owm)");
+        wind.add("Speed: " + wwindKph + " kph." + " (wu)");
+        wind.add("Max Speed: " + wwindKphMax + " kph." + " (wu)");
+        wind.add("Direction: " + df.format(odeg) + " degrees." + " (owm)");
+        wind.add("Direction: " + wwindDirection + "." + " (wu)");
 
         List<String> humidity = new ArrayList<>();
-        humidity.add("Average: " + ohumidity + ".");
-        humidity.add("Average: " + waveHumidity + ".");
-        humidity.add("Min: " + wminHumidity + ".");
-        humidity.add("Max: " + wmaxHumidity + ".");
+        humidity.add("Average: " + ohumidity + "." + " (owm)");
+        humidity.add("Average: " + waveHumidity + "." + " (wu)");
+        humidity.add("Min: " + wminHumidity + "." + " (wu)");
+        humidity.add("Max: " + wmaxHumidity + "." + " (wu)");
 
         List<String> pressure = new ArrayList<>();
-        pressure.add("Pressure: " + opressure);
+        pressure.add("Pressure: " + opressure + " (owm)");
 
         List<String> riseSet = new ArrayList<>();
-        riseSet.add("Sun Rise: " + msunRise + ".");
-        riseSet.add("Sun Set: " + msunSet + ".");
-        riseSet.add("Moon Rise: " + mmoonRise + ".");
-        riseSet.add("Moon Set: " + mmoonSet + ".");
+        riseSet.add("Sun Rise: " + msunRise + "." + " (metsvc)");
+        riseSet.add("Sun Set: " + msunSet + "." + " (metsvc)");
+        riseSet.add("Moon Rise: " + mmoonRise + "." + " (metsvc)");
+        riseSet.add("Moon Set: " + mmoonSet + "." + " (metsvc)");
 
         // Put all child data
 
@@ -317,7 +398,7 @@ public class AllProvidersScreen extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_all_providers_screen, menu);
+        //getMenuInflater().inflate(R.menu.menu_all_providers_screen, menu);
         return true;
     }
 
@@ -326,12 +407,12 @@ public class AllProvidersScreen extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //if (id == R.id.action_settings) {
+        //    return true;
+        //}
 
         return super.onOptionsItemSelected(item);
     }

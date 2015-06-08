@@ -5,7 +5,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -16,6 +19,9 @@ import bit.ankem1.WeatherWorks.WeatherUndergroundApi.SimpleForecastDay;
 // If we reach this activity, we can safely use the data in WeatherStore.
 public class WUScreen extends ActionBarActivity
 {
+    private final int MAX_DAYS = 9;
+    private final int MIN_DAYS = 0;
+
     // Controls
     TextView txtWuTitle;
     TextView txtWuDescription;
@@ -25,6 +31,8 @@ public class WUScreen extends ActionBarActivity
     TextView txtWuPrecipitationSnow;
     TextView txtWuWind;
     TextView txtWuHumidity;
+    Button btnWUNext;
+    Button btnWUPrevious;
 
 
     // The forecastday index
@@ -75,6 +83,9 @@ public class WUScreen extends ActionBarActivity
         txtWuPrecipitationSnow = (TextView)findViewById(R.id.txtWuPrecipitationSnow);
         txtWuWind = (TextView)findViewById(R.id.txtWuWind);
 
+        btnWUNext = (Button)findViewById(R.id.btnWUNext);
+        btnWUPrevious = (Button)findViewById(R.id.btnWUPrevious);
+
         // Get the day number from the intent
         Intent intent = getIntent();
         dayNumber = intent.getIntExtra("day", 0);   // Use the first day as default
@@ -84,6 +95,68 @@ public class WUScreen extends ActionBarActivity
 
         // Populate all of our text fields
         populateTextFields();
+
+        // Wire up click handlers
+        btnWUPrevious.setOnClickListener(new BtnPrevListener());
+        btnWUNext.setOnClickListener(new BtnNextListener());
+    }
+
+    // Inner class to handle button click events for btnNext
+    public class BtnNextListener implements View.OnClickListener
+    {
+
+        @Override
+        public void onClick(View v)
+        {
+            // Launch this activity again, passing in the next day's numeric value
+
+            // Don't try go forwards if this is the last day
+            if(dayNumber == MAX_DAYS)
+            {
+                // Report that there's no more days to see that way
+                Toast.makeText(WUScreen.this, "Can't go forward any further.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                // Show the previous day by creating an intent and launching this activity.
+                Intent refreshIntent = new Intent(WUScreen.this, WUScreen.class);
+
+                int nextDay = (dayNumber += 1);
+
+                refreshIntent.putExtra("day", nextDay);
+
+                startActivity(refreshIntent);
+            }
+        }
+    }
+
+    // Inner class to handle button click events for btnPrevious
+    public class BtnPrevListener implements View.OnClickListener
+    {
+
+        @Override
+        public void onClick(View v)
+        {
+            // Launch this Activity again, passing in the previous day's numeric value.
+
+            // Don't try go backwards if this is the first day
+            if (dayNumber == MIN_DAYS)
+            {
+                // Report that there's no more days to see that way
+                Toast.makeText(WUScreen.this, "Can't go back any further.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                // Show the previous day by creating an intent and launching this activity.
+                Intent refreshIntent = new Intent(WUScreen.this, WUScreen.class);
+
+                int nextDay = (dayNumber -= 1);
+
+                refreshIntent.putExtra("day", nextDay);
+
+                startActivity(refreshIntent);
+            }
+        }
     }
 
     // Use data belonging to this class to populate our screen controls
@@ -165,7 +238,7 @@ public class WUScreen extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_wuscreen, menu);
+        //getMenuInflater().inflate(R.menu.menu_wuscreen, menu);
         return true;
     }
 
@@ -174,12 +247,12 @@ public class WUScreen extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //if (id == R.id.action_settings) {
+        //    return true;
+        //}
 
         return super.onOptionsItemSelected(item);
     }

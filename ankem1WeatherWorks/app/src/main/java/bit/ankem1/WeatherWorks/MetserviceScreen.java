@@ -5,13 +5,19 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import bit.ankem1.WeatherWorks.MetserviceApi.Day;
 
 // This activity shows all information from Metservice
 public class MetserviceScreen extends ActionBarActivity
 {
+    private final int MAX_DAYS = 9;
+    private final int MIN_DAYS = 0;
+
     // Screen controls
     TextView txtMetserviceTitle;
     TextView txtMetDescription;
@@ -20,6 +26,8 @@ public class MetserviceScreen extends ActionBarActivity
     TextView txtMetLocation;
     TextView txtMetSunRiseSet;
     TextView txtMetMoonRiseSet;
+    Button btnMSNext;
+    Button btnMSPrevious;
 
     // The forecast day index
     int dayNumber;
@@ -55,6 +63,9 @@ public class MetserviceScreen extends ActionBarActivity
         txtMetSunRiseSet = (TextView)findViewById(R.id.txtMetSunRiseSet);
         txtMetMoonRiseSet = (TextView)findViewById(R.id.txtMetMoonRiseSet);
 
+        btnMSNext = (Button)findViewById(R.id.btnMSNext);
+        btnMSPrevious = (Button)findViewById(R.id.btnMSPrevious);
+
         // Get the day number from the intent
         Intent intent = getIntent();
         dayNumber = intent.getIntExtra("day", 0);   // Use the first day as default
@@ -65,6 +76,68 @@ public class MetserviceScreen extends ActionBarActivity
         // Populate our textviews
         populateTextViews();
 
+        // Wire up click handlers
+        btnMSPrevious.setOnClickListener(new BtnPrevListener());
+        btnMSNext.setOnClickListener(new BtnNextListener());
+
+    }
+
+    // Inner class to handle button click events for btnNext
+    public class BtnNextListener implements View.OnClickListener
+    {
+
+        @Override
+        public void onClick(View v)
+        {
+            // Launch this activity again, passing in the next day's numeric value
+
+            // Don't try go forwards if this is the last day
+            if(dayNumber == MAX_DAYS)
+            {
+                // Report that there's no more days to see that way
+                Toast.makeText(MetserviceScreen.this, "Can't go forward any further.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                // Show the previous day by creating an intent and launching this activity.
+                Intent refreshIntent = new Intent(MetserviceScreen.this, MetserviceScreen.class);
+
+                int nextDay = (dayNumber += 1);
+
+                refreshIntent.putExtra("day", nextDay);
+
+                startActivity(refreshIntent);
+            }
+        }
+    }
+
+    // Inner class to handle button click events for btnPrevious
+    public class BtnPrevListener implements View.OnClickListener
+    {
+
+        @Override
+        public void onClick(View v)
+        {
+            // Launch this Activity again, passing in the previous day's numeric value.
+
+            // Don't try go backwards if this is the first day
+            if (dayNumber == MIN_DAYS)
+            {
+                // Report that there's no more days to see that way
+                Toast.makeText(MetserviceScreen.this, "Can't go back any further.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                // Show the previous day by creating an intent and launching this activity.
+                Intent refreshIntent = new Intent(MetserviceScreen.this, MetserviceScreen.class);
+
+                int nextDay = (dayNumber -= 1);
+
+                refreshIntent.putExtra("day", nextDay);
+
+                startActivity(refreshIntent);
+            }
+        }
     }
 
     // Use data belonging to this class to populate our screen controls
@@ -108,7 +181,7 @@ public class MetserviceScreen extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_metservice_screen, menu);
+        //getMenuInflater().inflate(R.menu.menu_metservice_screen, menu);
         return true;
     }
 
@@ -117,12 +190,12 @@ public class MetserviceScreen extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //if (id == R.id.action_settings) {
+        //    return true;
+        //}
 
         return super.onOptionsItemSelected(item);
     }

@@ -24,7 +24,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/scrollview_height"
+        android:fillViewport="true"
         android:id="@+id/svOpenWeatherMap" >
 
         <LinearLayout
@@ -136,5 +137,34 @@
 
         </LinearLayout>
     </ScrollView>
+
+        <!-- Navigation bar -->
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            style="?android:attr/buttonBarStyle"
+            android:weightSum="2">
+
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"
+                android:text="Previous Day"
+                android:id="@+id/btnOWMPrevious" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"
+                android:text="Next Day"
+                android:id="@+id/btnOWMNext" />
+
+        </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>

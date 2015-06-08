@@ -45,7 +45,10 @@ import bit.ankem1.WeatherWorks.OpenWeatherMapApi.OpenWeatherMapResponse;
 public class MainScreen extends ActionBarActivity
 {
     // Shared Preferences Filename
-    private final String PREFS_NAME = "metservice_location";
+    private final String PREFS_NAME = "provider_location";
+    // Dunedin Coordinates for default location.
+    private final double DEFAULT_LAT = -45.878760;
+    private final double DEFAULT_LON = 170.502798;
     private final double KELVIN = 273.15;
     private final int NTEMPS = 2;
     private final double CONVERTMULTIPLIER = 18;
@@ -60,12 +63,13 @@ public class MainScreen extends ActionBarActivity
     private final String WEATHERUNDERGROUND_KEY = "5c4cb075a7f03f66";
     // Weather Underground API options
     private final String WEATHERUNDERGROUND_FORECASTOPTION = "forecast10day";
+    // Configuration listview loction index
+    private final int CONFIG_INDEX = 4;
     // Screen controls
     TextView txtMetserDescription;
     TextView txtWUDescription;
     TextView txtOWMDescription;
     TextView txtTempVar;
-    TextView txtRainVar;
     TextView txtWindVar;
     ListView lvProviders;
     // Location
@@ -102,22 +106,28 @@ public class MainScreen extends ActionBarActivity
         lvProviders.setOnItemClickListener(new ListViewClickHandler());
 
         // Turn on location polling
-        requestLocationUpdates();
+        //requestLocationUpdates();
 
         // Get latitude and longitude values
-        Location loc = getLastKnownLocation();
+        //Location loc = getLastKnownLocation();
 
         // This loop can potentially run for a long time.
-        while (loc == null)
-            loc = getLastKnownLocation();
+        //while (loc == null)
+        //    loc = getLastKnownLocation();
 
 
-        longitude = loc.getLongitude();
-        latitude = loc.getLatitude();
+        //longitude = loc.getLongitude();
+        //latitude = loc.getLatitude();
+
+        // Store location in Preferences and allow the user to select the province
+        // which they'd like to view weather for.
 
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        // Our default location will be Dunedin.
         city = settings.getString("location", "dunedin");
+        latitude = settings.getFloat("latitude", (float)DEFAULT_LAT);
+        longitude = settings.getFloat("longitude", (float)DEFAULT_LON);
 
         // Pull all weather info, store in WeatherStore.
         pullOpenWeatherMap();
@@ -131,6 +141,37 @@ public class MainScreen extends ActionBarActivity
 
     }
 
+    // Manage events in the activity lifecycle
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        txtMetserDescription.setText("Loading...");
+
+        // Pull all weather info, store in WeatherStore.
+        pullOpenWeatherMap();
+        pullMetservice();
+        pullWeatherUnderground();
+
+        populateVariances();
+    }
+
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+
+        txtMetserDescription.setText("Loading...");
+
+        // Pull all weather info, store in WeatherStore.
+        pullOpenWeatherMap();
+        pullMetservice();
+        pullWeatherUnderground();
+
+        populateVariances();
+    }
+
     // Inner class for handling ListView click events
     public class ListViewClickHandler implements AdapterView.OnItemClickListener
     {
@@ -139,19 +180,68 @@ public class MainScreen extends ActionBarActivity
         @Override
         public void onItemClick(AdapterView<?> list, View itemView, int position, long id)
         {
-            // Create the Activity we want to launch
-            ForecastDaysScreen forecastScreen = new ForecastDaysScreen();
+            // If the user selected the config option, open the config screen.
+            if(position == CONFIG_INDEX)
+            {
+                // Get the desired location from the settings activity
+                // Call activity for result
+                Intent intentForResult = new Intent(MainScreen.this, Settings.class);
 
-            // Create an intent
-            Intent goToIntent = new Intent(MainScreen.this, forecastScreen.getClass());
+                // The second parameter is an id to track the request.
+                startActivityForResult(intentForResult, 0);
+            }
+            else    // Otherwise proceed with the correct provider
+            {
+                // Create the Activity we want to launch
+                ForecastDaysScreen forecastScreen = new ForecastDaysScreen();
 
-            // Put a integer value in the intent to indicate which provider we chose.
-            goToIntent.putExtra("provider", position);
+                // Create an intent
+                Intent goToIntent = new Intent(MainScreen.this, forecastScreen.getClass());
 
-            startActivity(goToIntent);
+                // Put a integer value in the intent to indicate which provider we chose.
+                goToIntent.putExtra("provider", position);
 
+                startActivity(goToIntent);
+            }
         }
+    }
 
+    // Process information received from the settings screen
+    @Override
+    protected void onActivityResult(int requestId, int resultCode, Intent returnIntent)
+    {
+        //---------------------------
+        // Retrieve the requested data
+
+        // Determine appropriate action based on the request ID
+        if (requestId == 0)
+        {
+            // Did the activity return 'Okay'?
+            if (resultCode == Activity.RESULT_OK)
+            {
+                // Get the data from the returnIntent
+                String returnedLocation = returnIntent.getStringExtra("location");
+                double returnedLat = returnIntent.getDoubleExtra("latitude", DEFAULT_LAT);
+                double returnedLon = returnIntent.getDoubleExtra("longitude", DEFAULT_LON);
+
+                // Modify our preferences file
+                // We need an Editor object to make preference changes.
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("location", returnedLocation);
+                editor.putFloat("latitude", (float)returnedLat);
+                editor.putFloat("longitude", (float)returnedLon);
+
+                // Commit the edits
+                editor.commit();
+
+                // Refresh the main screen and clear the activity stack.
+                Intent intent = new Intent(MainScreen.this, MainScreen.class);
+                // set the new task and clear flags
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        }
     }
 
     // Calculate and show the variance for pertinent weather information today.
@@ -313,6 +403,7 @@ public class MainScreen extends ActionBarActivity
         providers.add(new Provider("Metservice", metserviceResourceId));
         providers.add(new Provider("Open Weather Map", owmResourceId));
         providers.add(new Provider("Weather Underground", wuResourceId));
+        providers.add(new Provider("Configuration"));   // Add a configuration option for specifying location.
 
         // Make custom adapter
         ProviderArrayAdapter providerArrayAdapter = new ProviderArrayAdapter(MainScreen.this,
@@ -416,44 +507,9 @@ public class MainScreen extends ActionBarActivity
     }
 
     @Override
-    protected void onActivityResult(int requestId, int resultCode, Intent returnIntent)
-    {
-        //---------------------------
-        // Retrieve the requested data
-
-        // Determine appropriate action based on the request ID
-        if(requestId == 0)
-        {
-            // Did the activity return 'Okay'?
-            if(resultCode == Activity.RESULT_OK)
-            {
-                // Get the data from the returnIntent
-                String returnedLocation = returnIntent.getStringExtra("location" );
-
-                // Modify our preferences file
-                // We need an Editor object to make preference changes.
-                // All objects are from android.context.Context
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("location", returnedLocation);
-
-                city = returnedLocation;
-
-                // Commit the edits
-                editor.commit();
-
-                // Pull all weather info, store in WeatherStore.
-                pullOpenWeatherMap();
-                pullMetservice();
-                pullWeatherUnderground();
-            }
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main_screen, menu);
+        //getMenuInflater().inflate(R.menu.menu_main_screen, menu);
         return true;
     }
 
@@ -462,20 +518,13 @@ public class MainScreen extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            // Get the desired location from the settings activity
-            // Call activity for result
-            Intent intentForResult = new Intent(MainScreen.this, Settings.class);
-
-            // The second parameter is an id to track the request.
-            startActivityForResult(intentForResult, 0);
-
-            return true;
-        }
+        //if (id == R.id.action_settings)
+        //{
+        //    return true;
+        //}
 
         return super.onOptionsItemSelected(item);
     }

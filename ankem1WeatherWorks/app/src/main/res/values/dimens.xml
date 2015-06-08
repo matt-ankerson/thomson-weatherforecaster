@@ -5,4 +5,5 @@
     <dimen name="description_width">200sp</dimen>
     <dimen name="description_margin">10sp</dimen>
     <dimen name="description_height">210sp</dimen>
+    <dimen name="scrollview_height">400sp</dimen>
 </resources>

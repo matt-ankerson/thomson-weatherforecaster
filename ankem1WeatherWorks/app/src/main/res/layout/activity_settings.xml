@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Metservice requires a location to be specified by means of a city or place name. Please select from the list below. "
+            android:text="Please select the loaction you would like to query. "
             android:id="@+id/txtSettingsDesc"
             android:layout_margin="@dimen/description_margin"
             android:layout_gravity="center_horizontal" />

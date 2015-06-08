@@ -1,6 +1,8 @@
 package bit.ankem1.WeatherWorks;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,6 +24,8 @@ import java.util.GregorianCalendar;
 public class ForecastDaysScreen extends ActionBarActivity
 {
     private final int TIME_PERIOD_IN_DAYS = 10;
+    private final String PREFS_NAME = "metservice_location";
+    public final int CONFIG_POSITION = 0;
     public final int ALLPROVIDERS = 0;
     public final int METSERVICE = 1;
     public final int OPENWEATHERMAP = 2;
@@ -54,7 +58,7 @@ public class ForecastDaysScreen extends ActionBarActivity
         // Get a String representation of our list of dates.
         //      We also need to account for WeatherUnderground which
         //      provides nightly text-based forecasts too.
-        ArrayList<String> stringDays;
+        ArrayList<String> stringDays = new ArrayList<>();
 
         if(provider == WEATHERUNDERGROUND) {
             //stringDays = convertDatesWithNightsToString(days);
@@ -63,6 +67,10 @@ public class ForecastDaysScreen extends ActionBarActivity
         else {
             stringDays = convertDatesToString(days);
         }
+
+        // If this is the Metservice provider, add a configuration option
+        if (provider == METSERVICE)
+            stringDays.add(CONFIG_POSITION, "Configuration");
 
         // Populate the listview with the 10 days from now.
         populateDaysListView(stringDays);
@@ -86,6 +94,7 @@ public class ForecastDaysScreen extends ActionBarActivity
             //      - don't try to use data that doesn't exist.
 
             boolean proceed = true;
+            boolean goToConfig = false;
 
             if(provider == METSERVICE)
             {
@@ -135,9 +144,7 @@ public class ForecastDaysScreen extends ActionBarActivity
                 // Report the absence of data
                 Toast.makeText(ForecastDaysScreen.this, "Error loading data.\nReturn to home screen to reload.", Toast.LENGTH_SHORT).show();
             }
-
         }
-
     }
 
     public void populateDaysListView(ArrayList<String> days)
@@ -199,7 +206,7 @@ public class ForecastDaysScreen extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_forecast_days_screen, menu);
+        //getMenuInflater().inflate(R.menu.menu_forecast_days_screen, menu);
         return true;
     }
 
@@ -208,12 +215,12 @@ public class ForecastDaysScreen extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //if (id == R.id.action_settings) {
+        //    return true;
+        //}
 
         return super.onOptionsItemSelected(item);
     }

@@ -5,7 +5,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -21,6 +24,8 @@ import retrofit.client.Response;
 public class OpenWeatherMapScreen extends ActionBarActivity
 {
     private final double KELVIN = 273.15;
+    private final int MAX_DAYS = 9;
+    private final int MIN_DAYS = 0;
 
     // index for this forecast day
     int dayNumber;
@@ -32,6 +37,8 @@ public class OpenWeatherMapScreen extends ActionBarActivity
     TextView txtOWMHumidity;
     TextView txtOWMWind;
     TextView txtOWMPrecipitation;
+    Button btnOWMNext;
+    Button btnOWMPrevious;
 
     // Forecast data for this day
     int dt;
@@ -68,6 +75,9 @@ public class OpenWeatherMapScreen extends ActionBarActivity
         txtOWMTemperature = (TextView)findViewById(R.id.txtOWMTemperature);
         txtOWMWind = (TextView)findViewById(R.id.txtOWMWind);
 
+        btnOWMNext = (Button)findViewById(R.id.btnOWMNext);
+        btnOWMPrevious = (Button)findViewById(R.id.btnOWMPrevious);
+
         // Get the day number from the intent
         Intent intent = getIntent();
         dayNumber = intent.getIntExtra("day", 0);   // Use the first day as default
@@ -77,6 +87,68 @@ public class OpenWeatherMapScreen extends ActionBarActivity
 
         // Populate our textviews
         populateTextViews();
+
+        // Wire up click handlers
+        btnOWMPrevious.setOnClickListener(new BtnPrevListener());
+        btnOWMNext.setOnClickListener(new BtnNextListener());
+    }
+
+    // Inner class to handle button click events for btnNext
+    public class BtnNextListener implements View.OnClickListener
+    {
+
+        @Override
+        public void onClick(View v)
+        {
+            // Launch this activity again, passing in the next day's numeric value
+
+            // Don't try go forwards if this is the last day
+            if(dayNumber == MAX_DAYS)
+            {
+                // Report that there's no more days to see that way
+                Toast.makeText(OpenWeatherMapScreen.this, "Can't go forward any further.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                // Show the previous day by creating an intent and launching this activity.
+                Intent refreshIntent = new Intent(OpenWeatherMapScreen.this, OpenWeatherMapScreen.class);
+
+                int nextDay = (dayNumber += 1);
+
+                refreshIntent.putExtra("day", nextDay);
+
+                startActivity(refreshIntent);
+            }
+        }
+    }
+
+    // Inner class to handle button click events for btnPrevious
+    public class BtnPrevListener implements View.OnClickListener
+    {
+
+        @Override
+        public void onClick(View v)
+        {
+            // Launch this Activity again, passing in the previous day's numeric value.
+
+            // Don't try go backwards if this is the first day
+            if (dayNumber == MIN_DAYS)
+            {
+                // Report that there's no more days to see that way
+                Toast.makeText(OpenWeatherMapScreen.this, "Can't go back any further.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                // Show the previous day by creating an intent and launching this activity.
+                Intent refreshIntent = new Intent(OpenWeatherMapScreen.this, OpenWeatherMapScreen.class);
+
+                int nextDay = (dayNumber -= 1);
+
+                refreshIntent.putExtra("day", nextDay);
+
+                startActivity(refreshIntent);
+            }
+        }
     }
 
 
@@ -92,12 +164,12 @@ public class OpenWeatherMapScreen extends ActionBarActivity
                                     "\nDay: " + df.format(day) +
                                     "\nEvening: " + df.format(eve) +
                                     "\nNight: " + df.format(night));
-        txtOWMWind.setText("Kph: " + speed +
-                            "\nDirection: " + deg + " degrees");
-        txtOWMPressure.setText("Pressure: " + pressure);
-        txtOWMPrecipitation.setText("Clouds: " + clouds + " %" +
-                                    "\nRain: " + rain + " mm for prev 3hrs");
-        txtOWMHumidity.setText("Humidity: " + humidity);
+        txtOWMWind.setText("Kph: " + df.format(speed) +
+                            "\nDirection: " + df.format(deg) + " degrees");
+        txtOWMPressure.setText("Pressure: " + df.format(pressure));
+        txtOWMPrecipitation.setText("Clouds: " + df.format(clouds) + " %" +
+                                    "\nRain: " + df.format(rain) + " mm for prev 3hrs");
+        txtOWMHumidity.setText("Humidity: " + df.format(humidity));
     }
 
     // Get all info we need from the WeatherStore
@@ -128,7 +200,7 @@ public class OpenWeatherMapScreen extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_open_weather_map_screen, menu);
+        //getMenuInflater().inflate(R.menu.menu_open_weather_map_screen, menu);
         return true;
     }
 
@@ -137,12 +209,12 @@ public class OpenWeatherMapScreen extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //if (id == R.id.action_settings) {
+        //    return true;
+        //}
 
         return super.onOptionsItemSelected(item);
     }

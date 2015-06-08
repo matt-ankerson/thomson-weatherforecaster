@@ -1,5 +1,7 @@
 package bit.ankem1.WeatherWorks;
 
+import android.graphics.Point;
+
 import bit.ankem1.WeatherWorks.MetserviceApi.MetserviceResponse;
 import bit.ankem1.WeatherWorks.OpenWeatherMapApi.OpenWeatherMapResponse;
 import bit.ankem1.WeatherWorks.WeatherUndergroundApi.WeatherUndergroundResponse;
@@ -16,6 +18,7 @@ public class WeatherStore
     private OpenWeatherMapResponse owmResponse;
     private MetserviceResponse metserviceResponse;
     private WeatherUndergroundResponse weatherUndergroundResponse;
+    private Point coordinates;
 
     // Constructor hidden because this is a singletom
     private WeatherStore()
@@ -52,6 +55,10 @@ public class WeatherStore
     {
         return weatherUndergroundResponse;
     }
+    public Point getCoordinates()
+    {
+        return coordinates;
+    }
 
 
     // Modifier functions
@@ -67,5 +74,9 @@ public class WeatherStore
     public void setWuResponse(WeatherUndergroundResponse weatherUndergroundResponse)
     {
         this.weatherUndergroundResponse = weatherUndergroundResponse;
+    }
+    public void setCoordinates(Point newCoordinates)
+    {
+        this.coordinates = newCoordinates;
     }
 }
