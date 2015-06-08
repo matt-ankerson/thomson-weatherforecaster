@@ -31,6 +31,7 @@ public class OpenWeatherMapScreen extends ActionBarActivity
     int dayNumber;
 
     // Controls
+    TextView txtOwmTitle;
     TextView txtOWMDescription;
     TextView txtOWMTemperature;
     TextView txtOWMPressure;
@@ -67,7 +68,11 @@ public class OpenWeatherMapScreen extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_weather_map_screen);
 
+        // Set basic ui settings
+        setTitle("Weather Works");
+
         // Get references to the controls
+        txtOwmTitle = (TextView)findViewById(R.id.txtOwmTitle);
         txtOWMDescription = (TextView)findViewById(R.id.txtOWMDescription);
         txtOWMHumidity = (TextView)findViewById(R.id.txtOWMHumidity);
         txtOWMPrecipitation = (TextView)findViewById(R.id.txtOWMPrecipitation);
@@ -155,6 +160,21 @@ public class OpenWeatherMapScreen extends ActionBarActivity
     // Populate our TextViews with data belonging to this class
     public void populateTextViews()
     {
+        // Metservice conveniently provides a text representation of today's date,
+        //      try to get that if it's available.
+        bit.ankem1.WeatherWorks.MetserviceApi.Day metsvcDay = WeatherStore.getInstance().getMetserviceResponse().getDays()[dayNumber];
+
+        if(metsvcDay != null)
+        {
+            String dow = metsvcDay.getDow();
+            String date = metsvcDay.getDate();
+            txtOwmTitle.setText("Opn Wthr Map: " + dow + " " + date);
+        }
+        else    // else it's not available, don't worry about it.
+        {
+            txtOwmTitle.setText("Opn Wthr Map: ");
+        }
+
         DecimalFormat df = new DecimalFormat("####0.00");
 
         txtOWMDescription.setText(main + "(" + description + ").");

@@ -54,6 +54,9 @@ public class MetserviceScreen extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_metservice_screen);
 
+        // Set basic ui settings
+        setTitle("Weather Works");
+
         // Get references to controls
         txtMetserviceTitle = (TextView)findViewById(R.id.txtMetserviceTitle);
         txtMetDescription = (TextView)findViewById(R.id.txtMetDescription);
@@ -143,7 +146,7 @@ public class MetserviceScreen extends ActionBarActivity
     // Use data belonging to this class to populate our screen controls
     public void populateTextViews()
     {
-        txtMetserviceTitle.setText("Metservice: " + dow);
+        txtMetserviceTitle.setText("Metservice: " + dow + " " + date);
 
         txtMetDescription.setText(forecastWord + ". " + forecast);
         txtMetIssuedAt.setText(issuedAt);

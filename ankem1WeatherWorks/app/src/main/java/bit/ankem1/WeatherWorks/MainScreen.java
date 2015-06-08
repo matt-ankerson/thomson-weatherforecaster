@@ -1,7 +1,6 @@
 package bit.ankem1.WeatherWorks;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,10 +22,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +29,6 @@ import java.util.HashMap;
 import bit.ankem1.WeatherWorks.MetserviceApi.MetserviceResponse;
 import bit.ankem1.WeatherWorks.MetserviceApi.MetserviceRestClient;
 import bit.ankem1.WeatherWorks.OpenWeatherMapApi.OpenWeatherMapRestClient;
-import bit.ankem1.WeatherWorks.OpenWeatherMapApi.Weather;
 import bit.ankem1.WeatherWorks.WeatherUndergroundApi.WeatherUndergroundResponse;
 import bit.ankem1.WeatherWorks.WeatherUndergroundApi.WeatherUndergroundRestClient;
 import retrofit.Callback;
@@ -119,6 +113,7 @@ public class MainScreen extends ActionBarActivity
         //longitude = loc.getLongitude();
         //latitude = loc.getLatitude();
 
+        // ------------------------------------------------------
         // Store location in Preferences and allow the user to select the province
         // which they'd like to view weather for.
 
@@ -392,18 +387,20 @@ public class MainScreen extends ActionBarActivity
         String owmImageName = resources.getResourceEntryName(R.drawable.owm);
         String metserviceImageName = resources.getResourceEntryName(R.drawable.metservice);
         String wuImageName = resources.getResourceEntryName(R.drawable.wu);
+        String settingsImageName = resources.getResourceEntryName(R.drawable.settings);
 
         int allProvidersId = resources.getIdentifier(allProvidersName, "drawable", getPackageName());
         int owmResourceId = resources.getIdentifier(owmImageName, "drawable", getPackageName());
         int metserviceResourceId = resources.getIdentifier(metserviceImageName, "drawable", getPackageName());
         int wuResourceId = resources.getIdentifier(wuImageName, "drawable", getPackageName());
+        int settingsResourceId = resources.getIdentifier(settingsImageName, "drawable", getPackageName());
 
         // Populate List
         providers.add(new Provider("All Providers", allProvidersId));
         providers.add(new Provider("Metservice", metserviceResourceId));
         providers.add(new Provider("Open Weather Map", owmResourceId));
         providers.add(new Provider("Weather Underground", wuResourceId));
-        providers.add(new Provider("Configuration"));   // Add a configuration option for specifying location.
+        providers.add(new Provider("Configuration", settingsResourceId));   // Add a configuration option for specifying location.
 
         // Make custom adapter
         ProviderArrayAdapter providerArrayAdapter = new ProviderArrayAdapter(MainScreen.this,

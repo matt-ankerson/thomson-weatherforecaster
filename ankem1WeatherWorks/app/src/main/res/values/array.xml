@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="locations_array">
-        <item>Dunedin</item>
         <item>Alexandra</item>
-        <item>Invercargill</item>
-        <item>Gore</item>
-        <item>Christchurch</item>
-        <item>Nelson</item>
-        <item>Queenstown</item>
-        <item>Oamaru</item>
-        <item>Timaru</item>
-        <item>Wellington</item>
         <item>Auckland</item>
         <item>Ashburton</item>
+        <item>Christchurch</item>
+        <item>Dunedin</item>
+        <item>Gore</item>
         <item>Hamilton</item>
+        <item>Invercargill</item>
+        <item>Nelson</item>
+        <item>Oamaru</item>
+        <item>Queenstown</item>
+        <item>Timaru</item>
+        <item>Wellington</item>
+
+
+
     </string-array>
 </resources>

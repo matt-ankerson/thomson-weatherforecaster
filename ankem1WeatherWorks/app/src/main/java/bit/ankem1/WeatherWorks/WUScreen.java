@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import bit.ankem1.WeatherWorks.MetserviceApi.Day;
 import bit.ankem1.WeatherWorks.WeatherUndergroundApi.ForecastDay;
 import bit.ankem1.WeatherWorks.WeatherUndergroundApi.SimpleForecastDay;
 
@@ -72,6 +73,9 @@ public class WUScreen extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wuscreen);
+
+        // Set basic ui settings
+        setTitle("Weather Works");
 
         // Get references to controls
         txtWuTitle = (TextView)findViewById(R.id.txtWuTitle);
@@ -162,7 +166,21 @@ public class WUScreen extends ActionBarActivity
     // Use data belonging to this class to populate our screen controls
     public void populateTextFields()
     {
-        txtWuTitle.setText("WU: " + title);
+        // Metservice conveniently provides a text representation of today's date,
+        //      try to get that if it's available.
+        Day metsvcDay = WeatherStore.getInstance().getMetserviceResponse().getDays()[dayNumber];
+
+        if(metsvcDay != null)
+        {
+            String date = metsvcDay.getDate();
+            txtWuTitle.setText("WU: " + title + " " + date);
+        }
+        else    // else it's not available, don't worry about it.
+        {
+            txtWuTitle.setText("WU: " + title);
+        }
+
+        // Set the rest of the text controls
         txtWuDescription.setText(description);
         txtWuConditions.setText(conditions);
         txtWuTemperature.setText("High: " + tempHighC + " Low: " + tempLowC);

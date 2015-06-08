@@ -29,6 +29,9 @@ public class Settings extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        // Set basic ui settings
+        setTitle("Weather Works");
+
         // Get references to controls
         btnConfirm = (Button)findViewById(R.id.btnConfirm);
         spnLocations = (Spinner)findViewById(R.id.spnLocation);
@@ -90,18 +93,21 @@ public class Settings extends ActionBarActivity
         // Populate our HashMap of fully qualified locations.
         //  It should be noted that this is bad, geo-coordinates should be obtained
         //  by reverse geo-location lookup.
-        fullyQualifiedLocations.put(textLocations[0], new Coordinate(-45.878760, 170.502798));  // Dunedin
-        fullyQualifiedLocations.put(textLocations[2], new Coordinate(-45.249167, 169.379722));  // Alexandra
-        fullyQualifiedLocations.put(textLocations[3], new Coordinate(-46.413187, 168.353773));  // Invercargill
-        fullyQualifiedLocations.put(textLocations[4], new Coordinate(-46.098799, 168.945819));  // Gore
-        fullyQualifiedLocations.put(textLocations[5], new Coordinate(-43.532054, 172.636225));  // Chch
-        fullyQualifiedLocations.put(textLocations[6], new Coordinate(-41.270632, 173.283965));  // Nelson
-        fullyQualifiedLocations.put(textLocations[7], new Coordinate(-45.031162, 168.662644));  // QTown
-        fullyQualifiedLocations.put(textLocations[8], new Coordinate(-45.097512, 170.970415));  // Oamaru
-        fullyQualifiedLocations.put(textLocations[9], new Coordinate(-44.396972, 171.254973));  // Timaru
-        fullyQualifiedLocations.put(textLocations[10], new Coordinate(-41.286460, 174.776236));  // Wellington
-        fullyQualifiedLocations.put(textLocations[11], new Coordinate(-36.848460, 174.763332));  // Auckland
-        fullyQualifiedLocations.put(textLocations[12], new Coordinate(-37.787001, 175.279253));  // Hamilton
+        fullyQualifiedLocations.put(textLocations[0], new Coordinate(-45.249167, 169.379722));  // Alexandra
+        fullyQualifiedLocations.put(textLocations[1], new Coordinate(-36.848460, 174.763332));  // Auckland
+        fullyQualifiedLocations.put(textLocations[2], new Coordinate(-43.908381, 171.748567));  // Ashburton
+        fullyQualifiedLocations.put(textLocations[3], new Coordinate(-43.532054, 172.636225));  // Chch
+        fullyQualifiedLocations.put(textLocations[4], new Coordinate(-45.878760, 170.502798));  // Dunedin
+        fullyQualifiedLocations.put(textLocations[5], new Coordinate(-46.098799, 168.945819));  // Gore
+        fullyQualifiedLocations.put(textLocations[6], new Coordinate(-37.787001, 175.279253));  // Hamilton
+        fullyQualifiedLocations.put(textLocations[7], new Coordinate(-46.413187, 168.353773));  // Invercargill
+        fullyQualifiedLocations.put(textLocations[8], new Coordinate(-41.270632, 173.283965));  // Nelson
+        fullyQualifiedLocations.put(textLocations[9], new Coordinate(-45.097512, 170.970415));  // Oamaru
+        fullyQualifiedLocations.put(textLocations[10], new Coordinate(-45.031162, 168.662644));  // QTown
+        fullyQualifiedLocations.put(textLocations[11], new Coordinate(-44.396972, 171.254973));  // Timaru
+        fullyQualifiedLocations.put(textLocations[12], new Coordinate(-41.286460, 174.776236));  // Wellington
+
+
     }
 
 

@@ -127,6 +127,9 @@ public class AllProvidersScreen extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_providers_screen);
 
+        // Set basic ui settings
+        setTitle("Weather Works");
+
         // Get references to controls
         txtTitle = (TextView)findViewById(R.id.txtAllProvidersTitle);
         btnNext = (Button)findViewById(R.id.btnNext);
@@ -150,7 +153,7 @@ public class AllProvidersScreen extends ActionBarActivity
         // set up list adapter
         expListView.setAdapter(listAdapter);
 
-        txtTitle.setText("All Providers: " + wtitle);
+        txtTitle.setText("All Providers: " + wtitle + " " + mdate);
 
         // Wire up click handlers
         btnPrevious.setOnClickListener(new BtnPrevListener());
@@ -242,7 +245,7 @@ public class AllProvidersScreen extends ActionBarActivity
 
         List<String> temperatures = new ArrayList<>();
         temperatures.add("High: " + mmax + " (metsvc)");
-        temperatures.add("High: " + df.format(omax) + " (owm)");
+        temperatures.add("High: " + df.format(omax) + " (metsvc)");
         temperatures.add("High: " + wtempHighC + " (wu)");
         temperatures.add("Low: " + mmin + " (metsvc)");
         temperatures.add("Low: " + df.format(omin) + " (owm)");
@@ -294,6 +297,11 @@ public class AllProvidersScreen extends ActionBarActivity
         listDataChild.put(listDataHeader.get(5), humidity);
         listDataChild.put(listDataHeader.get(6), pressure);
         listDataChild.put(listDataHeader.get(7), riseSet);
+    }
+
+    public static String padLeft(String s, int n)
+    {
+        return String.format("%1$" + n + "s", s);
     }
 
     // Get all data we need from the WeatherStore

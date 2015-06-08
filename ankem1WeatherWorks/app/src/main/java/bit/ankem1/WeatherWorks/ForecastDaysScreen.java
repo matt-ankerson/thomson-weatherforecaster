@@ -24,8 +24,6 @@ import java.util.GregorianCalendar;
 public class ForecastDaysScreen extends ActionBarActivity
 {
     private final int TIME_PERIOD_IN_DAYS = 10;
-    private final String PREFS_NAME = "metservice_location";
-    public final int CONFIG_POSITION = 0;
     public final int ALLPROVIDERS = 0;
     public final int METSERVICE = 1;
     public final int OPENWEATHERMAP = 2;
@@ -39,6 +37,9 @@ public class ForecastDaysScreen extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forecast_list);
+
+        // Set basic ui settings
+        setTitle("Weather Works");
 
         // Get the intent
         Intent intent = getIntent();
@@ -68,10 +69,6 @@ public class ForecastDaysScreen extends ActionBarActivity
             stringDays = convertDatesToString(days);
         }
 
-        // If this is the Metservice provider, add a configuration option
-        if (provider == METSERVICE)
-            stringDays.add(CONFIG_POSITION, "Configuration");
-
         // Populate the listview with the 10 days from now.
         populateDaysListView(stringDays);
 
@@ -94,7 +91,6 @@ public class ForecastDaysScreen extends ActionBarActivity
             //      - don't try to use data that doesn't exist.
 
             boolean proceed = true;
-            boolean goToConfig = false;
 
             if(provider == METSERVICE)
             {
