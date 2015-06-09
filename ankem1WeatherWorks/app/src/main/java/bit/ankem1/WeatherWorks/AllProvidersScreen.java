@@ -251,7 +251,7 @@ public class AllProvidersScreen extends ActionBarActivity
 
         List<String> temperatures = new ArrayList<>();
         temperatures.add("High: " + mmax + " (metsvc)");
-        temperatures.add("High: " + df.format(omax) + " (metsvc)");
+        temperatures.add("High: " + df.format(omax) + " (owm)");
         temperatures.add("High: " + wtempHighC + " (wu)");
         temperatures.add("Low: " + mmin + " (metsvc)");
         temperatures.add("Low: " + df.format(omin) + " (owm)");

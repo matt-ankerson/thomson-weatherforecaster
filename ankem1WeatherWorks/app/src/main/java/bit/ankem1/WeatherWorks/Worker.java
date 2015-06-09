@@ -40,7 +40,8 @@ public class Worker
 
         variance = variance / squaredDifferences.size();
 
-        return variance;
+        // Square root our variance and return it.
+        return Math.sqrt(variance);
 
     }
 }
