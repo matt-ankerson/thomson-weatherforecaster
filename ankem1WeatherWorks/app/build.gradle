@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'weather_works_key'
+            keyPassword 'Hamburger01'
+            storeFile file('/Users/matt/Documents/Polytechnic/BITY3/Resources/Mobile/key_stores/weather_works.jks')
+            storePassword 'Hamburger01'
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
         applicationId "bit.ankem1.WeatherWorks"
         minSdkVersion 15
@@ -15,6 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
